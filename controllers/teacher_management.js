@@ -60,26 +60,40 @@ exports.getTeacher = async (req, res) => {
 };
 //update
 exports.updateTeacher = async (req, res) => {
-  const { id, title, author, publishedYear } = req.body;
+  const {
+    MaGV, 
+    TenGV,
+    ChuyenNganh,
+    NamSinh,
+    GioiTinh,
+    CCCD,
+    Email,
+    SoDT 
+  } = req.body;
 
   try {
-    const bookRef = db.collection(table).doc(id);
-    const book = await bookRef.get();
+    const teacherRef = db.collection(table).doc(MaGV);
+    const teacher = await teacherRef.get();
 
-    if (!book.exists) {
-      return res.status(404).json({ message: 'Book not found' });
+    if (!teacher.exists) {
+      return res.status(404).json({ message: 'Teacher not found' });
     }
 
-    await bookRef.update({
-      title: title || book.data().title,
-      author: author || book.data().author,
-      publishedYear: publishedYear || book.data().publishedYear,
+    await teacherRef.update({
+      MaGV: MaGV || teacher.data.MaGV,
+      TenGV: TenGV || teacher.data.TenGV,
+      ChuyenNganh:ChuyenNganh || teacher.data.ChuyenNganh,
+      NamSinh:NamSinh || teacher.data.NamSinh,
+      GioiTinh:GioiTinh || teacher.data.GioiTinh,
+      CCCD:CCCD || teacher.data.CCCD,
+      Email:Email || teacher.data.Email,
+      SoDT:SoDT || teacher.data.SoDT
     });
 
-    const updatedBook = await bookRef.get();
+    const updatedTeacher = await teacherRef.get();
     const data = {
-      id: updatedBook.id,
-      ...updatedBook.data(),
+      MaGV: updatedTeacher.MaGV,
+      ...updatedTeacher.data(),
     };
 
     return res.status(200).json(data);
@@ -92,19 +106,19 @@ exports.updateTeacher = async (req, res) => {
 };
 //delete
 exports.deleteTeacher = async (req, res) => {
-  const { id} = req.body;
+  const { MaGV} = req.body;
   try {
-    console.log(`${id}`)
-    const bookRef = db.collection(table).doc(id);
-    const book = await bookRef.get();
+    console.log(`${MaGV}`)
+    const teacherRef = db.collection(table).doc(MaGV);
+    const teacher = await teacherRef.get();
 
-    if (!book.exists) {
-      return res.status(404).json({ message: 'Book not found' });
+    if (!teacher.exists) {
+      return res.status(404).json({ message: 'Teacher not found' });
     }
 
-    await bookRef.delete();
+    await teacherRef.delete();
 
-    return res.status(200).json({ message: 'Book deleted successfully' });
+    return res.status(200).json({ message: 'Teacher deleted successfully' });
   } catch (error) {
     console.error(error);
     return res

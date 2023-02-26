@@ -60,26 +60,40 @@ exports.getUser = async (req, res) => {
 };
 //update
 exports.updateUser = async (req, res) => {
-  const { id, title, author, publishedYear } = req.body;
+  const {
+    MaSV, 
+    TenSV,
+    Khoa,
+    NamSinh,
+    GioiTinh,
+    CCCD,
+    Email,
+    SoDT 
+   } = req.body;
 
   try {
-    const bookRef = db.collection(table).doc(id);
-    const book = await bookRef.get();
+    const userRef = db.collection(table).doc(MaSV);
+    const user = await userRef.get();
 
-    if (!book.exists) {
-      return res.status(404).json({ message: 'Book not found' });
+    if (!user.exists) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    await bookRef.update({
-      title: title || book.data().title,
-      author: author || book.data().author,
-      publishedYear: publishedYear || book.data().publishedYear,
+    await userRef.update({
+      MaSV: MaSV || user.data.MaSV,
+      TenSV: TenSV || user.data.TenSV,
+      Khoa:Khoa || user.data.Khoa,
+      NamSinh:NamSinh || user.data.NamSinh,
+      GioiTinh:GioiTinh || user.data.GioiTinh,
+      CCCD:CCCD || user.data.CCCD,
+      Email:Email || user.data.Email,
+      SoDT:SoDT || user.data.SoDT
     });
 
-    const updatedBook = await bookRef.get();
+    const updatedUser = await userRef.get();
     const data = {
-      id: updatedBook.id,
-      ...updatedBook.data(),
+      MaSV: updatedUser.MaSV,
+      ...updatedUser.data(),
     };
 
     return res.status(200).json(data);
@@ -92,19 +106,19 @@ exports.updateUser = async (req, res) => {
 };
 //delete
 exports.deleteUser = async (req, res) => {
-  const { id} = req.body;
+  const { MaSV} = req.body;
   try {
-    console.log(`${id}`)
-    const bookRef = db.collection(table).doc(id);
-    const book = await bookRef.get();
+    console.log(`${MaSV}`)
+    const userRef = db.collection(table).doc(MaSV);
+    const user = await userRef.get();
 
-    if (!book.exists) {
-      return res.status(404).json({ message: 'Book not found' });
+    if (!user.exists) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    await bookRef.delete();
+    await userRef.delete();
 
-    return res.status(200).json({ message: 'Book deleted successfully' });
+    return res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error(error);
     return res

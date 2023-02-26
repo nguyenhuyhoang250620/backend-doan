@@ -40,9 +40,9 @@ router.delete("/delete-user", deleteUser);
 // create teacher management
 router.post("/create-teacher", createTeacher);
 
-router.get("/get-user", getTeacher);
+router.get("/get-teacher", getTeacher);
 
-router.patch("/update-user", updateTeacher);
+router.patch("/update-teacher", updateTeacher);
 
-router.delete("/delete-user", deleteTeacher);
+router.delete("/delete-teacher", deleteTeacher);
 module.exports = router;
