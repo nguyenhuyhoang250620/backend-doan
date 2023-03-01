@@ -27,6 +27,13 @@ const {
   deleteDepartment
 }= require("../controllers/department")
 
+const {  
+  createSubject,
+  getSubject,
+  updateSubject,
+  deleteSubject,
+}= require("../controllers/subject_management")
+
 
 // authencation
 router.post("/signup", signup);
@@ -61,4 +68,14 @@ router.get("/get-department", getDepartment);
 router.patch("/update-department", updateDepartment);
 
 router.delete("/delete-department", deleteDepartment);
+
+// subject management
+router.post("/create-subject", createSubject);
+
+router.get("/get-subject", getSubject);
+
+router.patch("/update-subject", updateSubject);
+
+router.delete("/delete-subject", deleteSubject);
+
 module.exports = router;
