@@ -13,8 +13,8 @@ exports.createUser = async (req, res) => {
     Email,
     SoDT 
   } = req.body;
-
   try {
+    console.log(`huyhoang ${req.hay}`)
     const docRef = await db.collection(table).doc(MaSV);
     await docRef.set({
       MaSV, 

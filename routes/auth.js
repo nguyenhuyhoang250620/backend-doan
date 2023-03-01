@@ -34,6 +34,8 @@ const {
   deleteSubject,
 }= require("../controllers/subject_management")
 
+const{uploadfile} = require("../controllers/upload_file_image")
+
 
 // authencation
 router.post("/signup", signup);
@@ -78,4 +80,5 @@ router.patch("/update-subject", updateSubject);
 
 router.delete("/delete-subject", deleteSubject);
 
+router.post("/upload", uploadfile);
 module.exports = router;
