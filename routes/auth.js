@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const multer = require('multer');
 
 const { storage } = require("../config/firebase-admin");
 const {
@@ -28,16 +27,23 @@ const {
   getDepartment,
   updateDepartment,
   deleteDepartment
-}= require("../controllers/department")
+}= require("../controllers/department_management")
+
+const {  
+  createClass,
+  getClass,
+  updateClass,
+  deleteClass
+}= require("../controllers/class_management") 
 
 const {  
   createSubject,
   getSubject,
   updateSubject,
-  deleteSubject,
+  deleteSubject
 }= require("../controllers/subject_management")
 
-const{getImageUrl} = require("../controllers/upload_file_image")
+const{upload,uploadfile,getImageUrl} = require("../controllers/upload_file_image")
 
 
 // authencation
@@ -74,7 +80,16 @@ router.patch("/update-department", updateDepartment);
 
 router.delete("/delete-department", deleteDepartment);
 
-// subject management
+// class management
+router.post("/create-class", createClass);
+
+router.get("/get-class", getClass);
+
+router.patch("/update-class", updateClass);
+
+router.delete("/delete-class", deleteClass);
+
+// class subject
 router.post("/create-subject", createSubject);
 
 router.get("/get-subject", getSubject);
@@ -83,6 +98,9 @@ router.patch("/update-subject", updateSubject);
 
 router.delete("/delete-subject", deleteSubject);
 
-router.get("/get-image", getImageUrl);
+
+router.post("/upload-image",upload.single('file'),uploadfile);
+
+router.get("/get-image",getImageUrl);
 
 module.exports = router;

@@ -11,10 +11,10 @@ exports.createUser = async (req, res) => {
     GioiTinh,
     CCCD,
     Email,
-    SoDT 
+    SoDT,
+    Image, 
   } = req.body;
   try {
-    console.log(`huyhoang ${req.hay}`)
     const docRef = await db.collection(table).doc(MaSV);
     await docRef.set({
       MaSV, 
@@ -24,7 +24,8 @@ exports.createUser = async (req, res) => {
       GioiTinh,
       CCCD,
       Email,
-      SoDT 
+      SoDT,
+      Image  
     });
     const newBook = await docRef.get();
     const data = {
@@ -40,6 +41,7 @@ exports.createUser = async (req, res) => {
       .json({ general: 'Something went wrong, please try again' });
   }
 };
+
 //get dữ liệu
 exports.getUser = async (req, res) => {
   const booksRef = db.collection(table);
@@ -68,9 +70,8 @@ exports.updateUser = async (req, res) => {
     GioiTinh,
     CCCD,
     Email,
-    SoDT 
+    SoDT,
    } = req.body;
-
   try {
     const userRef = db.collection(table).doc(MaSV);
     const user = await userRef.get();
@@ -87,7 +88,7 @@ exports.updateUser = async (req, res) => {
       GioiTinh:GioiTinh || user.data.GioiTinh,
       CCCD:CCCD || user.data.CCCD,
       Email:Email || user.data.Email,
-      SoDT:SoDT || user.data.SoDT
+      SoDT:SoDT || user.data.SoDT,
     });
 
     const updatedUser = await userRef.get();

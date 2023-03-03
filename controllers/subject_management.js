@@ -2,21 +2,29 @@ const { db } = require("../config/firebase-admin");
 
 const table = 'Subject'
 //create
-exports.createSubject= async (req, res) => {
+exports.createSubject = async (req, res) => {
   const { 
-    MaPhong, 
-    TenPhong,
-    Mota,
-    TenMayQuet,
+    KhoiKienThuc,
+    MaHocPhan,
+    TenHocPhan,
+    KiThu,
+    SotinChi,
+    TongSoTiet,
+    DKTQ,
+    MoTa
   } = req.body;
 
   try {
-    const docRef = await db.collection(table).doc(MaPhong);
+    const docRef = await db.collection(table).doc(MaHocPhan);
     await docRef.set({
-        MaPhong, 
-        TenPhong,
-        Mota,
-        TenMayQuet,
+        KhoiKienThuc,
+        MaHocPhan,
+        TenHocPhan,
+        KiThu,
+        SotinChi,
+        TongSoTiet,
+        DKTQ,
+        MoTa
     });
     const newSub = await docRef.get();
     const data = {
@@ -34,9 +42,9 @@ exports.createSubject= async (req, res) => {
 };
 //get dữ liệu
 exports.getSubject = async (req, res) => {
-  const SubRef = db.collection(table);
+  const subjectRef = db.collection(table);
   try{
-    SubRef.get().then((snapshot) => {
+    subjectRef.get().then((snapshot) => {
           const data = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -53,31 +61,39 @@ exports.getSubject = async (req, res) => {
 //update
 exports.updateSubject = async (req, res) => {
   const {
-    MaPhong, 
-    TenPhong,
-    Mota,
-    TenMayQuet,
+    KhoiKienThuc,
+    MaHocPhan,
+    TenHocPhan,
+    KiThu,
+    SotinChi,
+    TongSoTiet,
+    DKTQ,
+    MoTa
   } = req.body;
 
   try {
-    const SubRef = db.collection(table).doc(MaPhong);
-    const subject = await SubRef.get();
+    const subjectRef = db.collection(table).doc(MaHocPhan);
+    const subject = await subjectRef.get();
 
     if (!subject.exists) {
       return res.status(404).json({ message: 'Teacher not found' });
     }
 
-    await SubRef.update({
-        MaPhong: MaPhong || subject.data.MaPhong,
-        TenPhong: TenPhong || subject.data.TenPhong,
-        Mota:Mota || subject.data.Mota,
-        TenMayQuet:TenMayQuet || subject.data.TenMayQuet,
+    await subjectRef.update({
+      KhoiKienThuc:KhoiKienThuc || subject.data.KhoiKienThuc,
+      MaHocPhan:MaHocPhan || subject.data.MaHocPhan,
+      TenHocPhan:TenHocPhan || subject.data.TenHocPhan,
+      KiThu:KiThu || subject.data.KiThu,
+      SotinChi:SotinChi || subject.data.SotinChi,
+      TongSoTiet:TongSoTiet || subject.data.TongSoTiet,
+      DKTQ:DKTQ || subject.data.DKTQ,
+      MoTa:MoTa || subject.data.MoTa
     });
 
-    const updatedSub = await SubRef.get();
+    const updatedSubject = await subjectRef.get();
     const data = {
-      MaGV: updatedSub.MaPhong,
-      ...updatedSub.data(),
+      MaHocPhan: updatedSubject.MaHocPhan,
+      ...updatedSubject.data(),
     };
 
     return res.status(200).json(data);
@@ -90,16 +106,17 @@ exports.updateSubject = async (req, res) => {
 };
 //delete
 exports.deleteSubject = async (req, res) => {
-  const { MaPhong} = req.body;
+  const { MaHocPhan} = req.body;
   try {
-    const SubRef = db.collection(table).doc(MaPhong);
-    const subject = await SubRef.get();
+    console.log(`${MaHocPhan}`)
+    const subjectRef = db.collection(table).doc(MaHocPhan);
+    const subject = await subjectRef.get();
 
     if (!subject.exists) {
       return res.status(404).json({ message: 'Department not found' });
     }
 
-    await SubRef.delete();
+    await subjectRef.delete();
 
     return res.status(200).json({ message: 'Department deleted successfully' });
   } catch (error) {

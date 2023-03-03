@@ -1,67 +1,62 @@
-const { storage } = require("../config/firebase-admin");
-const multer = require('multer');
+const firebase = require('../config/firebase-admin');
+const multer = require('multer')
+const{bucket} = require("../config/firebase-admin");
+const path = require('path');
+const{updateUser} = require("../controllers/student_management")
+const { db } = require("../config/firebase-admin");
 
-
-const fileStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/') // thư mục lưu trữ tệp tin
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname) // tên tệp tin
-    }
+exports.upload = multer({
+    storage: multer.memoryStorage()
 })
 
-exports.upload = multer({ storage: fileStorage });
-
 exports.uploadfile = async (req, res) => {
-    try {
-        // Lấy tệp tin cần tải lên từ request của client
-        console.log(req.file)
-        const file = req.file;
-
-        // Tạo tên tệp tin trên Firebase Storage
-        const fileName = `${Date.now()}_${file.originalname}`;
-
-        // Tải lên tệp tin lên Firebase Storage
-        const bucket = storage.bucket('gs://demoflutter-706b1.appspot.com');
-        const blob = bucket.file(fileName);
-
-        const stream = blob.createWriteStream({
-            metadata: {
-                contentType: file.mimetype
-            }
-        });
-
-        stream.on('error', (err) => {
-            console.log('Upload failed:', err);
-            res.status(500).send('Upload failed');
-        });
-
-        stream.on('finish', async () => {
-            console.log('Upload success!');
-            // Lấy URL của tệp tin vừa tải lên
-            const url = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-            res.status(200).send(url);
-        });
-
-        stream.end(file.buffer);
-    } catch (error) {
-        console.log('Upload failed:', error);
-        res.status(500).send('Upload failed');
+    if(!req.file) {
+        return res.status(400).send("Error: No files found")
     }
+    const blob = firebase.bucket.file(req.file.originalname)
+    
+    const blobWriter = blob.createWriteStream({
+        metadata: {
+            contentType: req.file.mimetype
+        }
+    })
+    
+    blobWriter.on('error', (err) => {
+        console.log(err)
+    })
+    
+    blobWriter.on('finish', () => {
+        blob.getSignedUrl({
+            action: 'read',
+            expires: '03-09-2023' // Thời gian hết hạn URL, có thể là một đối số tuỳ chọn
+        }, async (err, url) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).send("Error: Unable to generate signed URL");
+            }
+            console.log(url);
+            await db.collection('User').doc(req.masv).set({
+                url:url
+            },{merge:true})
+            
+            res.status(200).send("File uploaded.")
+        });
+    })
+    
+    blobWriter.end(req.file.buffer)
 };
 
-exports.getImageUrl = async function(fileName) {
+exports.getImageUrl = async function() {
     try {
-        const { storage } = require("../config/firebase-admin");
-        const bucket = storage.bucket('gs://demoflutter-706b1.appspot.com');
-        const file = bucket.file(fileName);
-        const url = await file.getSignedUrl({
-            action: 'read',
-            expires: '03-09-2024' // Ngày hết hạn
-        });
-        console.log('Image URL:', url);
-        return url;
+        console.log(bucket)
+        console.log(bucket.parent.baseUrl)
+        // const file = bucket.file();
+        // const url = await file.getSignedUrl({
+        //     action: 'read',
+        //     expires: '03-09-2024' // Ngày hết hạn
+        // });
+        // console.log('Image URL:', url);
+        // return url;
     } catch (error) {
         console.log('Get image URL failed:', error);
         return null;
