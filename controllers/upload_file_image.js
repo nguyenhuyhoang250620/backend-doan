@@ -1,10 +1,22 @@
 const { storage } = require("../config/firebase-admin");
-const fs = require('fs');
+const multer = require('multer');
+
+
+const fileStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/') // thư mục lưu trữ tệp tin
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname) // tên tệp tin
+    }
+})
+
+exports.upload = multer({ storage: fileStorage });
 
 exports.uploadfile = async (req, res) => {
     try {
         // Lấy tệp tin cần tải lên từ request của client
-        console.log(req)
+        console.log(req.file)
         const file = req.file;
 
         // Tạo tên tệp tin trên Firebase Storage
@@ -38,8 +50,10 @@ exports.uploadfile = async (req, res) => {
         res.status(500).send('Upload failed');
     }
 };
+
 exports.getImageUrl = async function(fileName) {
     try {
+        const { storage } = require("../config/firebase-admin");
         const bucket = storage.bucket('gs://demoflutter-706b1.appspot.com');
         const file = bucket.file(fileName);
         const url = await file.getSignedUrl({

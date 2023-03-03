@@ -3,14 +3,10 @@ var serviceAccount = require("../demoflutter-706b1-firebase-adminsdk-o5a4j-040ca
 const { Storage } = require('@google-cloud/storage');
 admin.initializeApp({
     credential:admin.credential.cert(serviceAccount),
+    storageBucket:"demoflutter-706b1.appspot.com"
 });
-const storage = new Storage({
-    projectId: "demoflutter-706b1",
-    credentials: {
-        client_email: 'tennguoidungoccho@gmail.com',
-        private_key: serviceAccount
-    }
-});
+
 const db = admin.firestore();
 db.settings({ ignoreUndefinedProperties: true })
-module.exports = {admin,db,storage}
+const bucket = admin.storage().bucket()
+module.exports = {admin,db,bucket}

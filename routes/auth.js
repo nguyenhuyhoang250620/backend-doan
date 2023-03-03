@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+
+const { storage } = require("../config/firebase-admin");
 const {
   signup,
   signin,
@@ -34,7 +37,7 @@ const {
   deleteSubject,
 }= require("../controllers/subject_management")
 
-const{uploadfile} = require("../controllers/upload_file_image")
+const{getImageUrl} = require("../controllers/upload_file_image")
 
 
 // authencation
@@ -80,5 +83,6 @@ router.patch("/update-subject", updateSubject);
 
 router.delete("/delete-subject", deleteSubject);
 
-router.post("/upload", uploadfile);
+router.get("/get-image", getImageUrl);
+
 module.exports = router;
