@@ -76,7 +76,7 @@ exports.updateClass = async (req, res) => {
 
     const updatedClass = await ClassRef.get();
     const data = {
-      MaGV: updatedClass.MaPhong,
+      MaPhong: updatedClass.MaPhong,
       ...updatedClass.data(),
     };
 

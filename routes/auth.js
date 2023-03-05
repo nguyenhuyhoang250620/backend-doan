@@ -43,6 +43,14 @@ const {
   deleteSubject
 }= require("../controllers/subject_management")
 
+const {  
+  createShift,
+  getShift,
+  updateShift,
+  deleteShift
+}= require("../controllers/shift_management")
+
+
 const{upload,uploadfile,getImageUrl} = require("../controllers/upload_file_image")
 
 
@@ -52,6 +60,7 @@ router.post("/signup", signup);
 router.post("/signin", signin);
 
 router.post("/forget-password", forgetPassword);
+
 
 //  student management
 router.post("/create-user", createUser);
@@ -89,7 +98,7 @@ router.patch("/update-class", updateClass);
 
 router.delete("/delete-class", deleteClass);
 
-// class subject
+//  subject management
 router.post("/create-subject", createSubject);
 
 router.get("/get-subject", getSubject);
@@ -98,9 +107,25 @@ router.patch("/update-subject", updateSubject);
 
 router.delete("/delete-subject", deleteSubject);
 
+// shift management
+router.post("/create-shift", createShift);
+
+router.get("/get-shift", getShift);
+
+router.patch("/update-shift", updateShift);
+
+router.delete("/delete-shift", deleteShift);
+
 
 router.post("/upload-image",upload.single('file'),uploadfile);
 
 router.get("/get-image",getImageUrl);
+
+
+const {getCurentIdUser} = require("../controllers/fisrt_login")
+
+router.get("/test",getCurentIdUser)
+
+
 
 module.exports = router;

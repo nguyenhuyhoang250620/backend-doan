@@ -6,7 +6,8 @@ admin.initializeApp({
     storageBucket:"demoflutter-706b1.appspot.com"
 });
 
+const auth = admin.auth();
 const db = admin.firestore();
 db.settings({ ignoreUndefinedProperties: true })
 const bucket = admin.storage().bucket()
-module.exports = {admin,db,bucket}
+module.exports = {admin,db,bucket,auth}

@@ -1,5 +1,6 @@
 const { db } = require("../config/firebase-admin");
-
+const admin = require("./../config/firebase-admin")
+const firebase = require("./../config/firebase");
 const table = 'Teacher'
 //create
 exports.createTeacher = async (req, res) => {
@@ -31,6 +32,21 @@ exports.createTeacher = async (req, res) => {
       id: newBook.id,
       ...newBook.data(),
     };
+    firebase
+    .auth()
+    .createUserWithEmailAndPassword(MaGV, MaGV)
+    .then((data) => {
+      return res.status(201).json(data);
+    })
+    .catch(function (error) {
+      let errorCode = error.code;
+      let errorMessage = error.message;
+      if (errorCode == "auth/weak-password") {
+        return res.status(500).json({ error: errorMessage });
+      } else {
+        return res.status(500).json({ error: errorMessage });
+      }
+    });
 
     return res.status(201).json(data);
   } catch (error) {
@@ -42,14 +58,20 @@ exports.createTeacher = async (req, res) => {
 };
 //get dữ liệu
 exports.getTeacher = async (req, res) => {
+
   const booksRef = db.collection(table);
   try{
+
           booksRef.get().then((snapshot) => {
           const data = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
       }));
           console.log(data);
+          // data.map(async (value)=>{
+          //   const user = await admin.auth.getUserByEmail(`${value.id}`);
+          //   console.log(user)
+          // })
           return res.status(201).json(data);
       })
   } catch (error) {

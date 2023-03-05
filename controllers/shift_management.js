@@ -1,25 +1,29 @@
 const { db } = require("../config/firebase-admin");
 
-const table = 'Department'
+const table = 'Shift'
 //create
-exports.createDepartment = async (req, res) => {
+exports.createShift= async (req, res) => {
   const { 
-    MaDV, 
-    TenDV,
+    MaCa,
+    TenCa, 
+    SoCa,
     Mota,
+    ThoiGian,
   } = req.body;
 
   try {
-    const docRef = await db.collection(table).doc(MaDV);
+    const docRef = await db.collection(table).doc(MaCa);
     await docRef.set({
-      MaDV, 
-      TenDV,
-      Mota,
+        MaCa,
+        TenCa, 
+        SoCa,
+        Mota,
+        ThoiGian,
     });
-    const newDep = await docRef.get();
+    const newShift = await docRef.get();
     const data = {
-      id: newDep.id,
-      ...newDep.data(),
+      id: newShift.id,
+      ...newShift.data(),
     };
 
     return res.status(201).json(data);
@@ -31,10 +35,10 @@ exports.createDepartment = async (req, res) => {
   }
 };
 //get dữ liệu
-exports.getDepartment = async (req, res) => {
-  const departRef = db.collection(table);
+exports.getShift = async (req, res) => {
+  const ShiftRef = db.collection(table);
   try{
-    departRef.get().then((snapshot) => {
+    ShiftRef.get().then((snapshot) => {
           const data = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -49,31 +53,35 @@ exports.getDepartment = async (req, res) => {
   }
 };
 //update
-exports.updateDepartment = async (req, res) => {
+exports.updateShift = async (req, res) => {
   const {
-    MaDV, 
-    TenDV,
+    MaCa,
+    TenCa, 
+    SoCa,
     Mota,
+    ThoiGian,
   } = req.body;
 
   try {
-    const departmentRef = db.collection(table).doc(MaDV);
-    const department = await departmentRef.get();
+    const ShiftRef = db.collection(table).doc(MaCa);
+    const shift = await ShiftRef.get();
 
-    if (!department.exists) {
+    if (!shift.exists) {
       return res.status(404).json({ message: 'Teacher not found' });
     }
 
-    await departmentRef.update({
-      MaDV: MaDV || department.data.MaDV,
-      TenDV: TenDV || department.data.TenDV,
-      Mota:Mota || department.data.Mota,
+    await ShiftRef.update({
+        MaCa:MaCa || shift.data.MaCa,
+        TenCa:TenCa || shift.data.TenCa, 
+        SoCa:SoCa || shift.data.SoCa,
+        Mota:Mota || shift.data.Mota,
+        ThoiGian:ThoiGian || shift.data.ThoiGian,
     });
 
-    const updatedDepartment = await departmentRef.get();
+    const updatedShift = await ShiftRef.get();
     const data = {
-      MaDV: updatedDepartment.MaDV,
-      ...updatedDepartment.data(),
+        MaPhong: updatedShift.MaPhong,
+      ...updatedShift.data(),
     };
 
     return res.status(200).json(data);
@@ -85,18 +93,17 @@ exports.updateDepartment = async (req, res) => {
   }
 };
 //delete
-exports.deleteDepartment = async (req, res) => {
-  const { MaDV} = req.body;
+exports.deleteShift = async (req, res) => {
+  const { MaCa} = req.body;
   try {
-    console.log(`${MaDV}`)
-    const departmentRef = db.collection(table).doc(MaDV);
-    const department = await departmentRef.get();
+    const ShiftRef = db.collection(table).doc(MaCa);
+    const shift = await ShiftRef.get();
 
-    if (!department.exists) {
+    if (!shift.exists) {
       return res.status(404).json({ message: 'Department not found' });
     }
 
-    await departmentRef.delete();
+    await ShiftRef.delete();
 
     return res.status(200).json({ message: 'Department deleted successfully' });
   } catch (error) {
