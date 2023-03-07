@@ -118,6 +118,10 @@ router.delete("/delete-shift", deleteShift);
 
 
 router.post("/upload-image",upload.single('file'),uploadfile);
+// router.post("/upload-image", upload.fields([
+//   { name: 'file', maxCount: 1 },
+//   { name: 'text' }
+// ]),uploadfile);
 
 router.get("/get-image",getImageUrl);
 

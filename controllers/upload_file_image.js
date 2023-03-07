@@ -8,7 +8,6 @@ const { db } = require("../config/firebase-admin");
 exports.upload = multer({
     storage: multer.memoryStorage()
 })
-
 exports.uploadfile = async (req, res) => {
     if(!req.file) {
         return res.status(400).send("Error: No files found")
@@ -35,10 +34,9 @@ exports.uploadfile = async (req, res) => {
                 return res.status(500).send("Error: Unable to generate signed URL");
             }
             console.log(url);
-            await db.collection('User').doc(req.masv).set({
+            await db.collection('User').doc(req.body.masv).set({
                 url:url
             },{merge:true})
-            
             res.status(200).send("File uploaded.")
         });
     })

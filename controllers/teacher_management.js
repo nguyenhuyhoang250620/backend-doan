@@ -32,22 +32,6 @@ exports.createTeacher = async (req, res) => {
       id: newBook.id,
       ...newBook.data(),
     };
-    firebase
-    .auth()
-    .createUserWithEmailAndPassword(MaGV, MaGV)
-    .then((data) => {
-      return res.status(201).json(data);
-    })
-    .catch(function (error) {
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      if (errorCode == "auth/weak-password") {
-        return res.status(500).json({ error: errorMessage });
-      } else {
-        return res.status(500).json({ error: errorMessage });
-      }
-    });
-
     return res.status(201).json(data);
   } catch (error) {
     console.error(error);
