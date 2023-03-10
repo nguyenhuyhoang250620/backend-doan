@@ -90,3 +90,16 @@ exports.forgetPassword = (req, res) => {
       }
     });
 };
+exports.logout = (req, res) => {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      console.log("Đăng xuất thành công");
+      return res.status(200).json({message: "Đăng xuất thành công"});
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(500).json({ error: error.message });
+    });
+};

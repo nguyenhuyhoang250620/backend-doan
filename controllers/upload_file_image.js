@@ -27,7 +27,7 @@ exports.uploadfile = async (req, res) => {
     blobWriter.on('finish', () => {
         blob.getSignedUrl({
             action: 'read',
-            expires: '03-09-2023' // Thời gian hết hạn URL, có thể là một đối số tuỳ chọn
+            expires: '03-09-2024' // Thời gian hết hạn URL, có thể là một đối số tuỳ chọn
         }, async (err, url) => {
             if (err) {
                 console.log(err);
