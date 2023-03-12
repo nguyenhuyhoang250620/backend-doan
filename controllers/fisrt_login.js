@@ -1,7 +1,7 @@
 const admin = require("../config/firebase-admin")
 const { db } = require("../config/firebase-admin");
 table = 'test'
-exports.getCurentIdUser = async function(){
+exports.getCurentIdUser = async (req,res)=>{
     const booksRef = db.collection(table);
     try{
   

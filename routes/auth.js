@@ -51,6 +51,8 @@ const {
   deleteShift
 }= require("../controllers/shift_management")
 
+const {createConfig} = require("../controllers/config_management")
+
 
 const{upload,uploadfile,getImageUrl} = require("../controllers/upload_file_image")
 
@@ -118,6 +120,10 @@ router.get("/get-shift", getShift);
 router.patch("/update-shift", updateShift);
 
 router.delete("/delete-shift", deleteShift);
+
+//config management
+
+router.post("/create-config",createConfig);
 
 
 router.post("/upload-image",upload.single('file'),uploadfile);
