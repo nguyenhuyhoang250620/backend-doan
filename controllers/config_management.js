@@ -1,11 +1,38 @@
-const { db } = require("../config/firebase-admin");
+const { db,admin } = require("../config/firebase-admin");
 
-const table = 'Teacher'
+const teacher = 'Teacher'
+const classs = 'Class'
+const department = 'Department'
+const shift = 'Shift'
+const subject = 'Subject'
+const user = 'User'
 //create
 exports.createConfig = async (req, res) => {
-    console.log(req.body.MaGV)
+  // console.log(req.body.MaGV);
+  // console.log(req.body.MaPhong);
+  // console.log(req.body.MaDV);
+  // console.log(req.body.MaCa);
+  console.log(req.body.MaSV);
   try {
-    const docRef = await db.collection(table).doc(req.body.MaGV).get()
+    const myArr = Object.values(req.body.MaSV);
+    const docsToAdd = [];
+    myArr.map(async (value)=>{
+      const docSV = await db.collection(user).doc(value).get()
+        .then(async (doc) => {
+            if (doc.exists) {
+            console.log('Dữ liệu của document:', doc.data());
+              return doc.data();
+            } else {
+            console.log('Không tìm thấy document!');
+              return 'Không tìm thấy document!'
+            }
+        })
+        .catch((error) => {
+            console.log('Lỗi khi lấy dữ liệu:', error);
+        });
+      docsToAdd.push(docSV);
+    })
+    const docGV = await db.collection(teacher).doc(req.body.MaGV).get()
     .then(async (doc) => {
         if (doc.exists) {
         console.log('Dữ liệu của document:', doc.data());
@@ -18,14 +45,75 @@ exports.createConfig = async (req, res) => {
     .catch((error) => {
         console.log('Lỗi khi lấy dữ liệu:', error);
     });
-    const de = await db.collection('Department').doc('123456789');
-    de.get().then(async(tes)=>{
-        const newData = Object.assign({}, docRef, { newField: docRef, });
-        const setdata = await db.collection('Config').doc(req.body.MaGV);
-        setdata.set(newData);
-        return res.status(201).json(newData);
+
+    const docMaPhong = await db.collection(classs).doc(req.body.MaPhong).get()
+    .then(async (doc) => {
+        if (doc.exists) {
+        console.log('Dữ liệu của document:', doc.data());
+          return doc.data();
+        } else {
+        console.log('Không tìm thấy document!');
+          return 'Không tìm thấy document!'
+        }
     })
-    // return res.status(200).json(de);
+    .catch((error) => {
+        console.log('Lỗi khi lấy dữ liệu:', error);
+    });
+
+    const docMaDV = await db.collection(department).doc(req.body.MaDV).get()
+    .then(async (doc) => {
+        if (doc.exists) {
+        console.log('Dữ liệu của document:', doc.data());
+          return doc.data();
+        } else {
+        console.log('Không tìm thấy document!');
+          return 'Không tìm thấy document!'
+        }
+    })
+    .catch((error) => {
+        console.log('Lỗi khi lấy dữ liệu:', error);
+    });
+
+    const docMaCa = await db.collection(shift).doc(req.body.MaCa).get()
+    .then(async (doc) => {
+        if (doc.exists) {
+        console.log('Dữ liệu của document:', doc.data());
+          return doc.data();
+        } else {
+        console.log('Không tìm thấy document!');
+          return 'Không tìm thấy document!'
+        }
+    })
+    .catch((error) => {
+        console.log('Lỗi khi lấy dữ liệu:', error);
+    });
+
+    const docMaHocPhan = await db.collection(subject).doc(req.body.MaHocPhan).get()
+    .then(async (doc) => {
+        if (doc.exists) {
+        console.log('Dữ liệu của document:', doc.data());
+          return doc.data();
+        } else {
+        console.log('Không tìm thấy document!');
+          return 'Không tìm thấy document!'
+        }
+    })
+    .catch((error) => {
+        console.log('Lỗi khi lấy dữ liệu:', error);
+    });
+    const newData = Object.assign({}, docGV, 
+      { magv: docGV, 
+        maphong:docMaPhong,
+        madv:docMaDV,
+        maca:docMaCa,
+        mahocphan:docMaHocPhan,
+        danhsach: admin.firestore.FieldValue.arrayUnion(...docsToAdd)
+      }
+      
+    );
+    const setdata = await db.collection('Config').doc(req.body.MaGV);
+    setdata.set(newData);
+    return res.status(201).json(newData);
   } catch (error) {
     console.error(error);
     return res
