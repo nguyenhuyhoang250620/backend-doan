@@ -1,5 +1,6 @@
 const { db,admin } = require("../config/firebase-admin");
 
+const table = 'Config';
 const teacher = 'Teacher'
 const classs = 'Class'
 const department = 'Department'
@@ -119,5 +120,24 @@ exports.createConfig = async (req, res) => {
     return res
       .status(500)
       .json({ general: 'Something went wrong, please try again' });
+  }
+};
+
+//get dữ liệu
+exports.getConfig = async (req, res) => {
+  const ShiftRef = db.collection(table);
+  try{
+    ShiftRef.get().then((snapshot) => {
+          const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+      }));
+          console.log(data);
+          return res.status(200).json(data);
+      })
+  } catch (error) {
+      return res
+      .status(500)
+      .json({ general: "Something went wrong, please try again"});          
   }
 };
