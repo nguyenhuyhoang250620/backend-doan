@@ -34,9 +34,16 @@ exports.uploadfile = async (req, res) => {
                 return res.status(500).send("Error: Unable to generate signed URL");
             }
             console.log(url);
-            await db.collection('User').doc(req.body.masv).set({
-                url:url
-            },{merge:true})
+            if(req.body.masv == undefined){
+                await db.collection('Teacher').doc(req.body.magv).set({
+                    url:url
+                },{merge:true})
+            }
+            else{
+                await db.collection('User').doc(req.body.masv).set({
+                    url:url
+                },{merge:true})
+            }
             res.status(200).send("File uploaded.")
         });
     })

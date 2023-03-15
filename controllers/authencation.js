@@ -1,16 +1,26 @@
 const firebase = require("./../config/firebase");
+const {admin} = require("../config/firebase-admin")
+
 
 // signup
 exports.signup = (req, res) => {
+  console.log("vao khong")
   if (!req.body.email || !req.body.password) {
     return res.status(422).json({
+      uid: 'email is required',
       email: "email is required",
       password: "password is required",
     });
   }
-  firebase
+  admin
     .auth()
-    .createUserWithEmailAndPassword(req.body.email, req.body.password)
+    .createUser(
+      {
+        uid: req.body.email,
+        email: req.body.email,
+        password: req.body.password,
+        disabled: true
+      })
     .then((data) => {
       return res.status(201).json(data);
     })
@@ -23,6 +33,36 @@ exports.signup = (req, res) => {
         return res.status(500).json({ error: errorMessage });
       }
     });
+};
+
+// disable
+exports.disable = (req, res) => {
+  console.log(req.body.uid)
+  admin.auth().updateUser(req.body.uid, {
+    disabled: true
+  })
+  .then(() => {
+    console.log('User account has been disabled');
+    return res.status(200).json('thanh cong')
+  })
+  .catch((error) => {
+    console.log('Error disabling user account:', error);
+  });
+};
+
+// enable
+exports.enable = (req, res) => {
+  console.log(req.body.uid)
+  admin.auth().updateUser(req.body.uid, {
+    disabled: false
+  })
+  .then(() => {
+    console.log('User account has been disabled');
+    return res.status(200).json('thanh cong')
+  })
+  .catch((error) => {
+    console.log('Error disabling user account:', error);
+  });
 };
 
 // signin

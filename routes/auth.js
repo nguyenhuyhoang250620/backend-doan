@@ -6,7 +6,9 @@ const {
   signup,
   signin,
   forgetPassword,
-  logout
+  logout,
+  disable,
+  enable
 } = require("../controllers/authencation");
 
 const {  
@@ -65,6 +67,11 @@ router.post("/signin", signin);
 router.post("/forget-password", forgetPassword);
 
 router.post("/logout", logout);
+
+router.post("/disable", disable);
+
+router.post("/enable", enable);
+
 
 
 //  student management
