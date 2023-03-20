@@ -53,6 +53,8 @@ const {
   deleteShift
 }= require("../controllers/shift_management")
 
+const{createFood,getFood,updateFood,deleteFood} = require("../controllers/food_management")
+
 const {createConfig,getConfig} = require("../controllers/config_management")
 
 
@@ -127,6 +129,16 @@ router.get("/get-shift", getShift);
 router.patch("/update-shift", updateShift);
 
 router.delete("/delete-shift", deleteShift);
+
+// food management
+router.post("/create-food", createFood);
+
+router.get("/get-food", getFood);
+
+router.patch("/update-food", updateFood);
+
+router.delete("/delete-food", deleteFood);
+
 
 //config management
 
