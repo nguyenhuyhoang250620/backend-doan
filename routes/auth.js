@@ -55,7 +55,13 @@ const {
 
 const{createFood,getFood,updateFood,deleteFood} = require("../controllers/food_management")
 
-const {createConfig,getConfig} = require("../controllers/config_management")
+const {
+  createConfig,
+  getConfig,
+  createPoint,
+  sumAvarage,
+  deleteStudent
+} = require("../controllers/config_management")
 
 
 const{upload,uploadfile,getImageUrl} = require("../controllers/upload_file_image")
@@ -144,7 +150,13 @@ router.delete("/delete-food", deleteFood);
 
 router.post("/create-config",createConfig);
 
+router.post("/create-point",createPoint);
+
 router.get("/get-config",getConfig);
+
+router.post("/sum-avarage",sumAvarage);
+
+router.delete("/delete-student",deleteStudent);
 
 
 router.post("/upload-image",upload.single('file'),uploadfile);
