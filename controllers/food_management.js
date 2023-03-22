@@ -9,9 +9,7 @@ exports.createFood= async (req, res) => {
     calo, 
     khoi_luong,
     chi_tiet,
-    so_luong,
-    trang_thai,
-    hinh_anh
+    type
   } = req.body;
 
   try {
@@ -22,16 +20,13 @@ exports.createFood= async (req, res) => {
         calo, 
         khoi_luong,
         chi_tiet,
-        so_luong,
-        trang_thai,
-        hinh_anh
+        type
     });
     const newFood = await docRef.get();
     const data = {
       id: newFood.id,
       ...newFood.data(),
     };
-
     return res.status(201).json(data);
   } catch (error) {
     console.error(error);
@@ -66,9 +61,8 @@ exports.updateFood = async (req, res) => {
     calo, 
     khoi_luong,
     chi_tiet,
-    so_luong,
-    trang_thai,
-    hinh_anh
+    hinh_anh,
+    type
   } = req.body;
 
   try {
@@ -85,9 +79,8 @@ exports.updateFood = async (req, res) => {
         calo:calo ||food.data.calo, 
         khoi_luong:khoi_luong ||food.data.khoi_luong,
         chi_tiet:chi_tiet ||food.data.chi_tiet,
-        so_luong:so_luong ||food.data.so_luong,
-        trang_thai:trang_thai ||food.data.trang_thai,
-        hinh_anh:hinh_anh ||food.data.hinh_anh
+        hinh_anh:hinh_anh ||food.data.hinh_anh,
+        type:type ||food.data.type,
     });
 
     const updatedFood = await FoodRef.get();

@@ -1,6 +1,6 @@
 const firebase = require('../config/firebase-admin');
 const multer = require('multer')
-const{bucket} = require("../config/firebase-admin");
+ 
 const path = require('path');
 const{updateUser} = require("../controllers/student_management")
 const { db } = require("../config/firebase-admin");
@@ -34,13 +34,18 @@ exports.uploadfile = async (req, res) => {
                 return res.status(500).send("Error: Unable to generate signed URL");
             }
             console.log(url);
-            if(req.body.masv == undefined){
+            if(req.body.masv != undefined){
+                await db.collection('User').doc(req.body.masv).set({
+                    url:url
+                },{merge:true})
+            }
+            else if(req.body.magv != undefined){
                 await db.collection('Teacher').doc(req.body.magv).set({
                     url:url
                 },{merge:true})
             }
-            else{
-                await db.collection('User').doc(req.body.masv).set({
+            else if(req.body.ma_mon != undefined){
+                await db.collection('Food').doc(req.body.ma_mon).set({
                     url:url
                 },{merge:true})
             }
@@ -50,6 +55,7 @@ exports.uploadfile = async (req, res) => {
     
     blobWriter.end(req.file.buffer)
 };
+
 
 exports.getImageUrl = async function() {
     try {
