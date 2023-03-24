@@ -64,6 +64,11 @@ const {
 } = require("../controllers/config_management")
 
 
+const {createAttendance,getAttendance} = require("../controllers/attendance")
+
+const {createOrderfood,getOderfood} = require("../controllers/order_food_management")
+
+
 const{upload,uploadfile,getImageUrl} = require("../controllers/upload_file_image")
 
 
@@ -157,6 +162,19 @@ router.get("/get-config",getConfig);
 router.post("/sum-avarage",sumAvarage);
 
 router.delete("/delete-student",deleteStudent);
+
+
+//orderfood management
+
+router.post("/create-orderFood",createOrderfood);
+
+router.get("/get-orderFood",getOderfood);
+
+
+//attendance
+router.post("/create-attendance",createAttendance);
+
+router.get("/get-attendance",getAttendance);
 
 
 router.post("/upload-image",upload.single('file'),uploadfile);

@@ -9,59 +9,57 @@ const shift = 'Shift'
 const subject = 'Subject'
 const user = 'User'
 exports.createPoint = async(req,res)=>{
-  const docRef = admin.firestore().collection(table).doc(req.body.magv);
-  await  docRef.get().then((item)=>{
-      console.log(item.data()['danhsach'])
-      const danhsach = item.data()['danhsach'];
-       // Tìm vị trí của object trong mảng dựa trên trường `MaSV`.
-        const index = danhsach.findIndex((item) => item.MaSV === req.body.masv);
+  
+  const docRef = admin.firestore().collection(table);
+  await docRef.where('MaGV', '==', req.body.magv).limit(1).get().then((querySnapshot) => {
+    if (!querySnapshot.empty) {
+      const danhsach = querySnapshot.docs[0].data()['danhsach'];
+      // Tìm vị trí của object trong mảng dựa trên trường `MaSV`.
+      const index = danhsach.findIndex((item) => item.MaSV === req.body.masv);
 
-        // Thêm trường mới vào object tìm được.
-        const updatedObj = Object.assign({},danhsach[index], { 
-          DiemChuyenCan: req.body.DiemChuyenCan, 
-          DiemGiuaKi: req.body.DiemGiuaKi, 
-          DiemCuoiKi: req.body.DiemCuoiKi, 
-          DiemTrungBinh: req.body.DiemTrungBinh, 
-        });
+      // Thêm trường mới vào object tìm được.
+      const updatedObj = Object.assign({},danhsach[index], { 
+        DiemChuyenCan: req.body.DiemChuyenCan, 
+        DiemGiuaKi: req.body.DiemGiuaKi, 
+        DiemCuoiKi: req.body.DiemCuoiKi, 
+        DiemTrungBinh: req.body.DiemTrungBinh, 
+      });
 
-        // Cập nhật object trong mảng.
-        danhsach.splice(index, 1, updatedObj);
+      // Cập nhật object trong mảng.
+      danhsach.splice(index, 1, updatedObj);
 
-        // Cập nhật tài liệu với mảng đã được cập nhật.
-        docRef.update({ danhsach })
-          .then(() => res.status(200).json(danhsach))
-          .catch((error) => console.error('Lỗi khi cập nhật trường mới:', error));
-    })
-
+      // Cập nhật tài liệu với mảng đã được cập nhật.
+      docRef.doc(querySnapshot.docs[0].id).update({ danhsach })
+        .then(() => res.status(200).json(danhsach))
+        .catch((error) => console.error('Lỗi khi cập nhật trường mới:', error));
+    }
+  });
 }
 exports.sumAvarage = async(req,res)=>{
   console.log(req.body.magv);
   console.log(req.body.mahocphan);
-  let avarage;
-  const docRef = admin.firestore().collection(table).doc(req.body.magv);
-  await  docRef.get().then((item)=>{
-      const danhsach = item.data()['danhsach'];
-       // Tìm vị trí của object trong mảng dựa trên trường `MaSV`.
-       for (let i = 0; i < danhsach.length; i++) {
-        avarage = parseInt(danhsach[i].DiemChuyenCan)*0.1+parseInt(danhsach[i].DiemGiuaKi)*0.2+parseInt(danhsach[i].DiemCuoiKi)*0.7
-        console.log(avarage)
-        const updatedObj = Object.assign({},danhsach[i], { 
+  let danhsach = [];
+  const docRef = admin.firestore().collection(table);
+  await docRef.where('MaGV', '==', req.body.magv).limit(1).get().then((querySnapshot) => {
+    if (!querySnapshot.empty) {
+      danhsach = querySnapshot.docs[0].data()['danhsach'];
+      // Tính điểm trung bình của từng sinh viên trong mảng.
+      for (let i = 0; i < danhsach.length; i++) {
+        const avarage = parseInt(danhsach[i].DiemChuyenCan) * 0.1 + parseInt(danhsach[i].DiemGiuaKi) * 0.2 + parseInt(danhsach[i].DiemCuoiKi) * 0.7;
+        console.log(avarage);
+        // Tạo một đối tượng mới với trường `DiemTrungBinh` được cập nhật.
+        const updatedObj = Object.assign({}, danhsach[i], { 
           DiemTrungBinh: avarage.toFixed(2).toString(), 
         });
-
-        // Cập nhật object trong mảng.
+        // Cập nhật đối tượng trong mảng.
         danhsach.splice(i, 1, updatedObj);
-
-        // Cập nhật tài liệu với mảng đã được cập nhật.
       }
-      docRef.update({ danhsach })
-      .then(() => res.status(200).json(danhsach))
-      .catch((error) => console.error('Lỗi khi cập nhật trường mới:', error));
-      
-      //  let num = parseInt(str);
-
-        // Thêm trường mới vào object tìm được.
-    })
+      // Cập nhật tài liệu với mảng đã được cập nhật.
+      docRef.doc(querySnapshot.docs[0].id).update({ danhsach })
+        .then(() => res.status(200).json(danhsach))
+        .catch((error) => console.error('Lỗi khi cập nhật trường mới:', error));
+    }
+  });
 
 }
 exports.deleteStudent = async (req, res) => {
@@ -198,7 +196,7 @@ exports.createConfig = async (req, res) => {
       }
       
     );
-    const setdata = await db.collection('Config').doc(req.body.MaGV);
+    const setdata = await db.collection(table).doc();
     setdata.set(newData);
     return res.status(201).json(newData);
   } catch (error) {
@@ -213,7 +211,8 @@ exports.createConfig = async (req, res) => {
 exports.getConfig = async (req, res) => {
   const ShiftRef = db.collection(table);
   try{
-    ShiftRef.get().then((snapshot) => {
+    if(req.query.MaGV == undefined){
+        ShiftRef.get().then((snapshot) => {
           const data = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -221,9 +220,30 @@ exports.getConfig = async (req, res) => {
           console.log(data);
           return res.status(200).json(data);
       })
+    }else if(req.query.MaHocPhan != undefined && req.query.MaGV != undefined){
+      ShiftRef.where('MaGV', '==', req.query.MaGV).where('mahocphan.MaHocPhan', '==' , req.query.MaHocPhan).get().then((snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log(data);
+        return res.status(200).json(data);
+      });
+    }
+    else{
+      ShiftRef.where('MaGV', '==', req.query.MaGV).get().then((snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log(data);
+        return res.status(200).json(data);
+      });
+    }
   } catch (error) {
       return res
       .status(500)
       .json({ general: "Something went wrong, please try again"});          
   }
 };
+//get dữ liệu
