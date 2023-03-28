@@ -79,9 +79,16 @@ exports.signin = (req, res) => {
   firebase
     .auth()
     .signInWithEmailAndPassword(req.body.email, req.body.password)
-    .then((user) => {
-      console.log("dang nhap thanh cong")
-      return res.status(200).json(user);
+    .then((userCredential) => {
+      // Lấy thông tin người dùng
+      const user = userCredential.user;
+      
+      // Lấy ID token của người dùng
+      user.getIdToken().then((idToken) => {
+        // Sử dụng ID token để xác thực người dùng
+        // Tiếp tục xử lý tại đây
+        return res.status(200).json({ user: user, idToken: idToken });
+      });
     })
     .catch(function (error) {
       let errorCode = error.code;
