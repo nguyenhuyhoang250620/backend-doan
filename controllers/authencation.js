@@ -19,12 +19,8 @@ exports.signup = (req, res) => {
         uid: req.body.email,
         email: req.body.email,
         password: req.body.password,
-        disabled: true,
       })
     .then((data) => {
-      admin.auth().setCustomUserClaims(req.body.email, { role: 'admin' }).then(() => {
-        // Custom claims set for user
-      });
       return res.status(201).json(data);
     })
     .catch(function (error) {

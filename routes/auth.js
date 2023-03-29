@@ -71,6 +71,8 @@ const {createOrderfood,getOderfood} = require("../controllers/order_food_managem
 
 const{upload,uploadfile,getImageUrl} = require("../controllers/upload_file_image")
 
+const {author} = require("../controllers/authorcation")
+
 
 // authencation
 router.post("/signup", signup);
@@ -186,9 +188,8 @@ router.post("/upload-image",upload.single('file'),uploadfile);
 router.get("/get-image",getImageUrl);
 
 
-const {getCurentIdUser} = require("../controllers/fisrt_login")
-
-router.get("/test",getCurentIdUser)
+//authorcation
+router.post("/create-authorcation",author);
 
 
 

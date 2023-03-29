@@ -93,10 +93,6 @@ exports.deleteStudent = async (req, res) => {
 };
 //create
 exports.createConfig = async (req, res) => {
-  // console.log(req.body.MaGV);
-  // console.log(req.body.MaPhong);
-  // console.log(req.body.MaDV);
-  // console.log(req.body.MaCa);
   console.log(req.body.MaSV);
   try {
     const myArr = Object.values(req.body.MaSV);
