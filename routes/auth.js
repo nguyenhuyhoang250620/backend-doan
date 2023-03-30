@@ -64,6 +64,9 @@ const {
 } = require("../controllers/config_management")
 
 
+const{createNote} = require("../controllers/note_management")
+
+
 const {createAttendance,getAttendance} = require("../controllers/attendance")
 
 const {createOrderfood,getOderfood} = require("../controllers/order_food_management")
@@ -190,6 +193,10 @@ router.get("/get-image",getImageUrl);
 
 //authorcation
 router.post("/create-authorcation",author);
+
+
+//note
+router.post("/create-note",createNote);
 
 
 

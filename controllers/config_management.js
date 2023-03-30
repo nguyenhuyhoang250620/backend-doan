@@ -26,6 +26,9 @@ exports.createPoint = async(req,res)=>{
       });
 
       // Cập nhật object trong mảng.
+
+
+      
       danhsach.splice(index, 1, updatedObj);
 
       // Cập nhật tài liệu với mảng đã được cập nhật.
