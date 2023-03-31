@@ -21,6 +21,10 @@ exports.signup = (req, res) => {
         password: req.body.password,
       })
     .then((data) => {
+      // admin.auth().setCustomUserClaims(req.body.email, { 
+      //   role: 'admin',
+      //   authorcation : 'tong_quat,quan_ly_sinh_vien,quan_ly_giang_vien,quan_ly_phong_ban,quan_ly_vi_tri_phong_hoc,quan_ly_tin_chi,quan_ly_ca_hoc,quan_ly_thuc_don,quan_ly_phieu,cau_hinh_he_thong_diem_danh,order_food'
+      // })
       return res.status(201).json(data);
     })
     .catch(function (error) {

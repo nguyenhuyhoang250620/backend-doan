@@ -64,7 +64,11 @@ const {
 } = require("../controllers/config_management")
 
 
-const{createNote} = require("../controllers/note_management")
+const{
+  createNote,
+  getNote,
+  updateNote
+} = require("../controllers/note_management")
 
 
 const {createAttendance,getAttendance} = require("../controllers/attendance")
@@ -197,6 +201,10 @@ router.post("/create-authorcation",author);
 
 //note
 router.post("/create-note",createNote);
+
+router.get("/get-note",getNote);
+
+router.patch("/update-note",updateNote);
 
 
 

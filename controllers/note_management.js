@@ -5,7 +5,6 @@ const table = 'Note'
 exports.createNote = async (req, res) => {
   const { 
     MaGV, 
-    TenGV,
     Status,
     Mota,
     Type,
@@ -16,7 +15,6 @@ exports.createNote = async (req, res) => {
     const docRef = await db.collection(table).doc();
     await docRef.set({
         MaGV, 
-        TenGV,
         Status,
         Mota,
         Type,
@@ -37,7 +35,7 @@ exports.createNote = async (req, res) => {
   }
 };
 //get dữ liệu
-exports.getDepartment = async (req, res) => {
+exports.getNote = async (req, res) => {
   const departRef = db.collection(table);
   try{
     departRef.get().then((snapshot) => {
@@ -55,40 +53,27 @@ exports.getDepartment = async (req, res) => {
   }
 };
 //update
-exports.updateDepartment = async (req, res) => {
+exports.updateNote = async (req, res) => {
   const {
-    MaDV, 
-    TenDV,
+    MaGV, 
+    Status,
     Mota,
+    Type,
+    ThoiGian
   } = req.body;
-
-  try {
-    const departmentRef = db.collection(table).doc(MaDV);
-    const department = await departmentRef.get();
-
-    if (!department.exists) {
-      return res.status(404).json({ message: 'Teacher not found' });
-    }
-
-    await departmentRef.update({
-      MaDV: MaDV || department.data.MaDV,
-      TenDV: TenDV || department.data.TenDV,
-      Mota:Mota || department.data.Mota,
-    });
-
-    const updatedDepartment = await departmentRef.get();
-    const data = {
-      MaDV: updatedDepartment.MaDV,
-      ...updatedDepartment.data(),
-    };
-
-    return res.status(200).json(data);
-  } catch (error) {
-    console.error(error);
-    return res
-      .status(500)
-      .json({ general: 'Something went wrong, please try again' });
-  }
+    const collectionRef = db.collection(table); 
+    const query = collectionRef.where('MaGV', '==', MaGV)
+    .where('Type', '==', Type)
+    .where('ThoiGian','==',ThoiGian);
+                              
+    query.get().then(snapshot => {
+      snapshot.forEach(doc => {
+        doc.ref.update({
+          Status: Status
+        });
+      });
+    })
+    return res.status(200).json(query);;
 };
 //delete
 exports.deleteDepartment = async (req, res) => {
