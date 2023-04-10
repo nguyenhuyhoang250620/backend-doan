@@ -37,21 +37,35 @@ exports.createAttendance = async (req, res) => {
 //get dữ liệu
 exports.getAttendance = async (req, res) => {
   const ShiftRef = db.collection(table);
-  try{
-    ShiftRef.where('MaGV', '==', req.query.MaGV).where('MaHocPhan', '==', req.query.MaHocPhan).get().then((snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      console.log(data);
-      return res.status(200).json(data);
+
+  try {
+    const snapshot = await ShiftRef.where('MaGV', '==', req.query.MaGV)
+                                    .where('MaHocPhan', '==', req.query.MaHocPhan)
+                                    .get();
+    let data = [];
+
+    snapshot.forEach((doc) => {
+      const diemDanh = doc.data().DiemDanh;
+      if (diemDanh) {
+        diemDanh.filter((dd) => {
+          if (dd.ThoiGian.includes(req.query.thoigian)) {
+            data.push({ id: doc.id, ...doc.data(), DiemDanh: [dd] });
+          }
+        });
+      }
     });
+    
+    return res.status(200).json(data);
   } catch (error) {
-      return res
-      .status(500)
-      .json({ general: "Something went wrong, please try again"});          
+    console.error(error);
+    return res.status(500).json({
+      general: "Something went wrong, please try again",
+    });
   }
 };
+
+
+
 
 //update
 exports.updateDepartment = async (req, res) => {
