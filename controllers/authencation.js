@@ -124,6 +124,7 @@ exports.forgetPassword = (req, res) => {
   if (!req.body.email) {
     return res.status(422).json({ email: "email is required" });
   }
+  console.log(req.body.email)
   firebase
     .auth()
     .sendPasswordResetEmail(req.body.email)
@@ -140,6 +141,7 @@ exports.forgetPassword = (req, res) => {
       }
     });
 };
+
 exports.logout = (req, res) => {
   firebase
     .auth()
