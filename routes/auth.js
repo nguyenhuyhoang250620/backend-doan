@@ -63,6 +63,8 @@ const {
   deleteStudent
 } = require("../controllers/config_management")
 
+const{getAttendanceTeacher}  =require("../controllers/attendance_teacher")
+
 
 const{
   createNote,
@@ -205,6 +207,9 @@ router.post("/create-note",createNote);
 router.get("/get-note",getNote);
 
 router.patch("/update-note",updateNote);
+
+//getAttendanceTeacher
+router.get("/get-attendance-teacher",getAttendanceTeacher);
 
 
 
