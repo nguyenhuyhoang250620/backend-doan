@@ -22,3 +22,35 @@ exports.getAttendanceTeacher = async (req, res) => {
     return res.status(500).json({ message: "Something went wrong, please try again" });
     }
   };
+
+
+  exports.createAttendanceTeacher = async (req, res) => {
+    const { 
+        MaGV, 
+        MaHocPhan,
+        MaPhong,
+        ThoiGian,
+        DiemDanh,
+    } = req.body;
+    try {
+        const docRef = await db.collection(table).doc(MaGV);
+        await docRef.set({
+            MaGV, 
+            MaHocPhan,
+            MaPhong,
+            ThoiGian,
+            DiemDanh,
+        });
+        const newBook = await docRef.get();
+        const data = {
+        id: newBook.id,
+        ...newBook.data(),
+        };
+        return res.status(201).json(data);
+    } catch (error) {
+        console.error(error);
+        return res
+        .status(500)
+        .json({ general: 'Something went wrong, please try again' });
+    }
+  };
