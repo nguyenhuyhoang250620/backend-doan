@@ -60,7 +60,8 @@ const {
   getConfig,
   createPoint,
   sumAvarage,
-  deleteStudent
+  deleteStudent,
+  deleteConfig
 } = require("../controllers/config_management")
 
 const{getAttendanceTeacher,createAttendanceTeacher} =require("../controllers/attendance_teacher")
@@ -173,6 +174,8 @@ router.get("/get-config",getConfig);
 router.post("/sum-avarage",sumAvarage);
 
 router.delete("/delete-student",deleteStudent);
+
+router.delete("/delete-config",deleteConfig);
 
 
 //orderfood management

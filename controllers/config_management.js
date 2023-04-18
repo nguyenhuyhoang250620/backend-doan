@@ -246,3 +246,18 @@ exports.getConfig = async (req, res) => {
   }
 };
 //get dữ liệu
+exports.deleteConfig = async (req, res) => {
+  const ShiftRef = db.collection(table);
+  ShiftRef.where('MaGV', '==', req.body.MaGV).where('mahocphan.MaHocPhan', '==',req.body.MaHocPhan).get().then((querySnapshot) => {
+    // Duyệt qua từng documents để xóa
+    querySnapshot.forEach((doc) => {
+      doc.ref.delete().then(() => {
+        console.log('Document successfully deleted!');
+        return res.status(200).json('Document successfully deleted!')
+      }).catch((error) => {
+        console.error('Error removing document: ', error);
+        return res.status(200).json('khong xoa duoc')
+      });
+    });
+  });
+};
