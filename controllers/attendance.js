@@ -40,8 +40,8 @@ exports.getAttendance = async (req, res) => {
 
   try {
     const snapshot = await ShiftRef.where('MaGV', '==', req.query.MaGV)
-                                    .where('MaHocPhan', '==', req.query.MaHocPhan)
-                                    .get();
+      .where('MaHocPhan', '==', req.query.MaHocPhan)
+      .get();
     let data = [];
 
     snapshot.forEach((doc) => {
